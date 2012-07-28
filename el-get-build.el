@@ -203,12 +203,17 @@ recursion.
 	     (el-get-set-info-path package infodir-rel)
 	     (el-get-build
 	      package
-              (list (list el-get-install-info
-                          (if (string= (substring infofile -5) ".info")
-			      infofile
-			    (concat infofile ".info"))
-                          "dir"))
-              infodir-rel t nil t)))
+        (list (list el-get-install-info
+                                        ; If the info file exists as
+                                        ; given in the recipe and is a
+                                        ; regular file don't attempt
+                                        ; to add the ".info" extension
+                    (if (file-regular-p infofile) infofile
+                      (if (string= (substring infofile -5) ".info")
+                          infofile
+                        (concat infofile ".info")))
+                    "dir"))
+        infodir-rel t nil t)))
 	  (t
 	   (error
 	    "el-get-install-or-init-info: %s not supported" build-or-init)))))))
